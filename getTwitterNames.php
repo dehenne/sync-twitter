@@ -9,6 +9,16 @@
 
 // helper functions
 
+function getAuthQuery()
+{
+    $settings = require 'etc/settings.php';
+
+    return http_build_query([
+        'api_key'      => $settings['discourse_api_key'],
+        'api_username' => $settings['discourse_api_username']
+    ]);
+}
+
 /**
  * @param string $url
  * @return string
@@ -32,9 +42,11 @@ function fetch($url)
  * @param $username
  * @return string
  */
-function fetchUser($username)
+function fetchUser($username) use ($settings)
 {
-    return fetch('https://club.megamaker.co/admin/users/'.$username.'.json)');
+    return fetch(
+        'https://club.megamaker.co/admin/users/'.$username.'.json?'.getAuthQuery()
+    );
 }
 
 /**
@@ -46,7 +58,7 @@ $twitterUser = [];
 
 // get all users
 
-$call   = 'https://club.megamaker.co/admin/users/list/active.json';
+$call   = 'https://club.megamaker.co/admin/users/list/active.json?'.getAuthQuery();
 $result = fetch($call);
 $users  = json_decode($result, true);
 

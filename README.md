@@ -37,7 +37,10 @@ return [
     'consumer_secret'           => "YOUR_CONSUMER_SECRET",
 
     'twitter_user' => 'de_henne',
-    'twitter_list' => 'megamaker'
+    'twitter_list' => 'megamaker',
+    
+    'discourse_api_key'      => 'YOUR_DISCOURSE_API_KEY',
+    'discourse_api_username' => 'YOUR_DISCOURSE_API_USERNAME'
 ];
 
 ```
