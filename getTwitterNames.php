@@ -63,6 +63,7 @@ function fetchList($page = false)
         $query['page'] = $page;
     }
 
+
     $call   = 'https://club.megamaker.co/admin/users/list/active.json?'.http_build_query($query);
     $result = fetch($call);
     $users  = json_decode($result, true);
@@ -116,7 +117,7 @@ foreach ($users as $user) {
     if (!isset($userData["user"]) || !isset($userData["user"]['user_fields']) || !$userData["user"]['user_fields'][1]) {
         continue;
     }
-
+    
     $twitterUser[] = $userData["user"]['user_fields'][1];
 
     // rate limiter
