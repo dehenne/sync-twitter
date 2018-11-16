@@ -45,7 +45,7 @@ function fetch($url)
 function fetchUser($username)
 {
     return fetch(
-        'https://club.megamaker.co/admin/users/'.$username.'.json?'.http_build_query(getAuthQuery())
+        'https://club.megamaker.co/users/'.$username.'.json?'.http_build_query(getAuthQuery())
     );
 }
 
@@ -105,19 +105,22 @@ if (!is_array($users)) {
 }
 
 // get the profiles of each user
-foreach ($users as $username) {
-    $userData = fetchUser($username);
+foreach ($users as $user) {
+    $userData = fetchUser($user["username"]);
     $userData = json_decode($userData, true);
 
     if (!$userData) {
         continue;
     }
 
-    if (!isset($userData['user_fields']) || !$userData['user_fields'][1]) {
+    if (!isset($userData["user"]) || !isset($userData["user"]['user_fields']) || !$userData["user"]['user_fields'][1]) {
         continue;
     }
 
-    $twitterUser[] = $userData['user_fields'][1];
+    $twitterUser[] = $userData["user"]['user_fields'][1];
+
+    // rate limiter
+    sleep(0.75);
 }
 
 echo json_encode($twitterUser);
