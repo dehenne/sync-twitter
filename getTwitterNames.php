@@ -42,7 +42,7 @@ function fetch($url)
  * @param $username
  * @return string
  */
-function fetchUser($username) use ($settings)
+function fetchUser($username)
 {
     return fetch(
         'https://club.megamaker.co/admin/users/'.$username.'.json?'.http_build_query(getAuthQuery())

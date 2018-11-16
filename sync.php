@@ -10,19 +10,32 @@ require 'vendor/autoload.php';
 
 $settings = require 'etc/settings.php';
 
+/**
+ * @return TwitterAPIExchange
+ */
+function Twitter()
+{
+    $settings = require 'etc/settings.php';
+
+    return new TwitterAPIExchange([
+        'oauth_access_token'        => $settings['oauth_access_token'],
+        'oauth_access_token_secret' => $settings['oauth_access_token_secret'],
+        'consumer_key'              => $settings['consumer_key'],
+        'consumer_secret'           => $settings['consumer_secret']
+    ]);
+}
+
 
 /**
  * get twitter usernames from twitter list
  */
 
-$Twitter    = new TwitterAPIExchange($settings);
 $userResult = [];
 
 $fetchMembers = function () {
 };
 
 $fetchMembers = function ($cursor = false) use (
-    $Twitter,
     $settings,
     &$fetchMembers,
     &$userResult
@@ -40,7 +53,7 @@ $fetchMembers = function ($cursor = false) use (
     }
 
     try {
-        $result = $Twitter->setGetfield(http_build_query($query))->buildOauth(
+        $result = Twitter()->setGetfield(http_build_query($query))->buildOauth(
             'https://api.twitter.com/1.1/lists/members.json',
             'GET'
         )->performRequest();
@@ -78,6 +91,18 @@ foreach ($userResult as $entry) {
 $mmTwitterUsernames = shell_exec('php getTwitterNames.php'); // MegaMaker usernames
 $mmTwitterUsernames = json_decode($mmTwitterUsernames, true);
 
+// cleanup
+$mmTwitterUsernames = array_map(function ($username) {
+    if (strpos($username, 'http') !== false) {
+        $parse    = parse_url($username);
+        $parse    = trim($parse['path']);
+        $parse    = trim($parse, '/');
+        $parse    = trim($parse, '@');
+        $username = $parse;
+    }
+
+    return $username;
+}, $mmTwitterUsernames);
 
 /**
  * Add newest users
@@ -100,17 +125,26 @@ if (empty($missing)) {
 
 foreach ($missing as $username) {
     try {
-        $Twitter->setPostfields([
+        echo 'adding: '.$username.PHP_EOL;
+
+        $result = Twitter()->buildOauth(
+            'https://api.twitter.com/1.1/lists/members/create.json',
+            'POST'
+        )->setPostfields([
             "slug"              => $settings['twitter_list'],
             "owner_screen_name" => $settings['twitter_user'],
             "screen_name"       => $username
-        ])->buildOauth(
-            'https://api.twitter.com/1.1/lists/members/create.json',
-            'GET'
-        )->performRequest();
+        ])->performRequest();
+
+        $result = json_decode($result, true);
+
+        if (isset($result['errors'])) {
+            echo $result['errors'][0]['message'].PHP_EOL;
+            exit(0);
+        }
     } catch (\Exception $Exception) {
         echo $Exception->getMessage().PHP_EOL;
-        exit;
+        exit(0);
     }
 }
 
