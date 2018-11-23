@@ -76,7 +76,8 @@ You can now fill this array with twitter user names.
 
 return [
     'mijustin',
-    ''
+    'jonfriesen',
+    'dehenne'
 ];
 
 ```
