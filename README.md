@@ -53,3 +53,30 @@ php sync.php
 ```
 
 the best thing is to set up a cron to run this script daily or every few hours.
+
+
+Customizing
+------
+
+You can also manually add users to the list.
+Just create a user.php in the etc folder
+
+```php
+<?php
+
+return [];
+
+```
+
+You can now fill this array with twitter user names.
+
+
+```php
+<?php
+
+return [
+    'mijustin',
+    ''
+];
+
+```

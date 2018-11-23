@@ -116,6 +116,19 @@ $mmTwitterUsernames = array_map(function ($username) {
     return $username;
 }, $mmTwitterUsernames);
 
+// add extra user
+if (file_exists(dirname(__FILE__).'/etc/users.php')) {
+    $extraUsers = dirname(__FILE__).'/etc/users.php';
+
+    if (is_array($extraUsers)) {
+        foreach ($extraUsers as $username) {
+            if (is_string($username)) {
+                $mmTwitterUsernames[] = $username;
+            }
+        }
+    }
+}
+
 /**
  * Add newest users
  */
