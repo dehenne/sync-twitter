@@ -19,7 +19,6 @@ return [
     'consumer_secret'           => getenv("TWITTER_CONSUMER_SECRET"),
 
     'twitter_user' => getenv("TWITTER_USERNAME"),
-    
     // Note you must create this list ahead of time
     // and underscores are converted to dashes
     'twitter_list' => getenv("TWITTER_LIST_NAME"),

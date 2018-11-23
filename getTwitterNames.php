@@ -12,7 +12,6 @@
     limitations under the License.
 */
 
-
 /**
  * This file fetches all twitter accounts from the MegaMaker club
  * and outputs these data as json
