@@ -1,0 +1,55 @@
+# Service Definition Specification Version
+# (if you don't provide this you will be on latest, which may change without warning!)
+specVersion: "v1"
+
+# The name of your service
+name: "megamaker/sync-twitter"
+
+# Service will be assumed to be private unless this is explicitly set. This service
+# will be accessible externally - only applies to the latest tag.
+public: false
+
+# Can either be HTTPS or RUN
+# RUN mode is for executing long-running scripts. It runs until the script/code exists.
+# HTTPS mode is for high frequency code. It requires you expose a HTTP server from your code.
+mode: "RUN"
+
+# Automatic triggers that will run the service (HTTP triggers are added automatically)
+# triggers:
+#   # Schedule the service to run every minute (https://crontab.guru)
+#   - type: "schedule/cron"
+#     cron: "0 9 * * *"
+#     timezone: "Europe/London"
+#     # Will call the latest deployment - see tagging deployment https://zeplo.io/docs/zeplo-cli#deploy
+#     tag: "latest"
+
+#   - type: "app/stripe"
+#     account: "stripe-auth"
+
+# Port that your code will listen on
+# Only compatible with HTTPS mode.
+# port: 3000
+
+# Build the contents of the directory (during deployment), and then run the compiled src at runtime
+build:
+  context: "."
+  # Controls how the src is compiled (https://github.com/zeplo/zeplo-builder).
+  # Can be nodejs, go, ruby, python, java-mvn, php or docker
+  builder: "docker"
+
+  # If not provided, we will use .gitignore, .dockerignore or .npmignore
+  # include:
+  # - "**/*.js"
+  # exclude:
+  # - "node_modules/**"
+
+# Optionally provide environment variables / secrets
+environment:
+  - "TWITTER_OAUTH_ACCESS_TOKEN"
+  - "TWITTER_OAUTH_ACCESS_TOKEN_SECRET"
+  - "TWITTER_CONSUMER_KEY"
+  - "TWITTER_CONSUMER_SECRET"
+  - "TWITTER_USERNAME"
+  - "TWITTER_LIST_NAME"
+  - "DISCOURSE_API_KEY"
+  - "DISCOURSE_API_USERNAME"

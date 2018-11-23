@@ -1,4 +1,16 @@
 <?php
+/*
+    Copyright 2018 MegaMaker Community Members.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
 
 /**
  * This file synchronize the twitter users from MegaMaker to a Twitter List
@@ -122,6 +134,7 @@ if (empty($missing)) {
 /**
  * Add new users to the list
  */
+$errorCount = 0;
 
 foreach ($missing as $username) {
     try {
@@ -140,12 +153,20 @@ foreach ($missing as $username) {
 
         if (isset($result['errors'])) {
             echo $result['errors'][0]['message'].PHP_EOL;
-            exit(0);
+            // exit(0);
         }
     } catch (\Exception $Exception) {
+        echo "EXCEPTION".PHP_EOL;
         echo $Exception->getMessage().PHP_EOL;
-        exit(0);
+        echo "on user ".$username.PHP_EOL;
+
+        $errorCount++;
+
+        if ($errorCount >= 5) {
+            exit(0);
+        }
     }
 }
 
 echo 'Added all new users \(^^)/'.PHP_EOL;
+exit(0);
